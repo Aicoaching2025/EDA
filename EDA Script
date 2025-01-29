@@ -1,0 +1,69 @@
+# 📌 Step 1: Import Required Libraries
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 📌 Step 2: Load the Dataset
+dataset = pd.read_csv("data/dataset.csv")  # Ensure the dataset file is in the "data" folder
+
+# 📌 Step 3: Understand the Data Structure
+print("First 5 Rows of Dataset:")
+print(dataset.head())
+
+print("\nDataset Shape:", dataset.shape)
+print("\nColumn Names:", dataset.columns)
+
+# 📌 Step 4: Check for Missing Values
+missing_values = dataset.isnull().sum()
+print("\nMissing Values:\n", missing_values[missing_values > 0])
+
+# 📌 Step 5: Summary Statistics
+print("\nDataset Summary:")
+print(dataset.describe())
+
+# 📌 Step 6: Data Types and Unique Values
+print("\nData Types:")
+print(dataset.dtypes)
+
+print("\nUnique Values in Each Column:")
+for col in dataset.columns:
+    print(f"{col}: {dataset[col].nunique()} unique values")
+
+# 📌 Step 7: Handle Missing Values (Example)
+dataset.fillna(dataset.median(), inplace=True)  # Replace missing values with median
+
+# 📌 Step 8: Detect and Handle Outliers (Example)
+plt.figure(figsize=(10,5))
+sns.boxplot(data=dataset.select_dtypes(include=[np.number]))
+plt.xticks(rotation=90)
+plt.title("Boxplot of Numerical Features to Identify Outliers")
+plt.show()
+
+# 📌 Step 9: Visualizing Feature Distributions
+for col in dataset.select_dtypes(include=[np.number]).columns:
+    plt.figure(figsize=(6, 4))
+    sns.histplot(dataset[col], kde=True)
+    plt.title(f"Distribution of {col}")
+    plt.show()
+
+# 📌 Step 10: Feature Relationships (Correlation Heatmap)
+plt.figure(figsize=(10, 6))
+sns.heatmap(dataset.corr(), annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Feature Correlation Heatmap")
+plt.show()
+
+# 📌 Step 11: Scatter Plots for Key Relationships
+for col in ["Feature1", "Feature2"]:  # Replace with relevant feature names
+    if col in dataset.columns:
+        plt.figure(figsize=(6, 4))
+        sns.scatterplot(x=dataset[col], y=dataset["TargetVariable"])  # Replace with actual target column
+        plt.title(f"{col} vs TargetVariable")
+        plt.show()
+
+# 📌 Step 12: Save Cleaned Dataset (Optional)
+dataset.to_csv("data/cleaned_dataset.csv", index=False)
+print("\nCleaned dataset saved as 'cleaned_dataset.csv'")
+
+# 📌 Step 13: Print Final Dataset Info
+print("\nFinal Dataset Shape:", dataset.shape)
